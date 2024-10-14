@@ -10,6 +10,7 @@ from Model.Task import Task
 from Exception.EmployeeNotFoundException import EmployeeNotFoundException
 from Exception.ProjectNotFoundException import ProjectNotFoundException
 
+
 class TestProjectRepositoryImpl(unittest.TestCase):
 
     @patch('DAO.ProjectRepositoryImpl.PropertyUtil.getPropertyString')
@@ -22,42 +23,32 @@ class TestProjectRepositoryImpl(unittest.TestCase):
 
     def test_create_employee_success(self):
        
-        emp = Employee(name="John", designation="SDE-1", gender="Male", salary=50000, project_id=1)
+        emp = Employee(name="John", designation="SDE-1", gender="Male", salary=50000, project_id=1, role="employee")
         mock_cursor = Mock()
         self.repo.conn.cursor.return_value = mock_cursor
-        mock_cursor.fetchone.return_value = (1,)  # Simulate that the project exists
+        mock_cursor.fetchone.return_value = (1)  # Simulate that the project exists
         
         result = self.repo.createEmployee(emp)
         
         self.assertTrue(result)
         expected_calls = [
-            call('SELECT id FROM Project WHERE id = ?', (1,)),
-            call('INSERT INTO Employee (name, designation, gender, salary, project_id) VALUES (?, ?, ?, ?, ?)', 
-                 ('John', 'SDE-1', 'Male', 50000, 1))
+            call('SELECT id FROM Project WHERE id = ?', (1)),
+            call('INSERT INTO Employee (name, designation, gender, salary, project_id, role) VALUES (?, ?, ?, ?, ?, ?)', 
+                 ('John', 'SDE-1', 'Male', 50000, 1, "employee"))
         ]
         mock_cursor.execute.assert_has_calls(expected_calls, any_order=False)
-        self.assertEqual(mock_cursor.execute.call_count, 2)
+        self.assertEqual(mock_cursor.execute.call_count, 2) # verifies execute was called exactly twice.
         self.repo.conn.commit.assert_called_once()
         
-    # def test_create_task_success(self):
-    #     task = Task(task_name="Test Task", project_id=1, employee_id=1, status="assigned")
-    #     self.repo.conn.cursor().execute.return_value = None
-    #     self.repo.conn.commit.return_value = None
-        
-    #     result = self.repo.createTask(task)
-        
-    #     self.assertTrue(result)
-    #     self.repo.conn.cursor().execute.assert_called_once()
-    #     self.repo.conn.commit.assert_called_once()
 
-    def test_get_all_tasks_for_employee_in_project(self):
+    def test_get_all_tasks_for_employee_in_project(self):   # needs employee id and project id
         emp_id = 1
         project_id = 1
-        mock_tasks = [
+        mock_tasks = [                      #sample task
             (1, "Task 1", 1, 1, "assigned"),
             (2, "Task 2", 1, 1, "started")
         ]
-        self.repo.conn.cursor().fetchall.return_value = mock_tasks
+        self.repo.conn.cursor().fetchall.return_value = mock_tasks  # when fetchall() calls, mock_tasks should be returned 
         
         tasks = self.repo.getAllTasks(emp_id, project_id)
         
@@ -66,13 +57,13 @@ class TestProjectRepositoryImpl(unittest.TestCase):
         self.repo.conn.cursor().fetchall.assert_called_once()
 
     def test_employee_not_found_exception(self):
-        self.repo.conn.cursor().rowcount = 0
+        self.repo.conn.cursor().rowcount = 0        # condition for getting  EmployeeNotFound 
         
-        with self.assertRaises(EmployeeNotFoundException):
+        with self.assertRaises(EmployeeNotFoundException):  #starts a context manager that asserts the code inside it should raise an EmployeeNotFoundException
             self.repo.deleteEmployee(999)
         
     def test_project_not_found_exception(self):
-        self.repo.conn.cursor().rowcount = 0
+        self.repo.conn.cursor().rowcount = 0       # condition for getting  ProjectNotFoundException 
         
         with self.assertRaises(ProjectNotFoundException):
             self.repo.deleteProject(999)

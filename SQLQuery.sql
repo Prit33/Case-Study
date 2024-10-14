@@ -2,6 +2,13 @@ create database Project_Management_System;
 
 use Project_Management_System;
 
+CREATE TABLE Project (
+    id INT PRIMARY KEY IDENTITY,
+    project_name VARCHAR(100),
+    description TEXT,
+    start_date DATE,
+    status VARCHAR(50),
+);
 
 CREATE TABLE Employee (
     id INT PRIMARY KEY IDENTITY,
@@ -9,16 +16,10 @@ CREATE TABLE Employee (
     designation VARCHAR(100),
     gender VARCHAR(10),
     salary DECIMAL(10, 2),
-    project_id INT FOREIGN KEY REFERENCES Project(id)
+    project_id INT FOREIGN KEY REFERENCES Project(id),
+	role VARCHAR(10)
 );
 
-CREATE TABLE Project (
-    id INT PRIMARY KEY IDENTITY,
-    project_name VARCHAR(100),
-    description TEXT,
-    start_date DATE,
-    status VARCHAR(50)
-);
 
 CREATE TABLE Task (
     task_id INT PRIMARY KEY IDENTITY,
@@ -37,9 +38,9 @@ delete Employee ;
 delete task ;
 delete Project;
 
-/*drop table Task;
+drop table Task;
 drop table Project;
-drop table Employee;*/
+drop table Employee;
 
 
 

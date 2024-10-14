@@ -1,11 +1,12 @@
 class Employee:
-    def __init__(self, id=None, name=None, designation=None, gender=None, salary=None, project_id=None):
+    def __init__(self, id=None, name=None, designation=None, gender=None, salary=None, project_id=None, role=None):
         self.__id = id
         self.__name = name
         self.__designation = designation
         self.__gender = gender
         self.__salary = salary
         self.__project_id = project_id
+        self.__role = role
 
     # Getter for id
     def get_id(self):
@@ -54,3 +55,9 @@ class Employee:
     # Setter for project_id
     def set_project_id(self, project_id):
         self.__project_id = project_id
+
+    def get_role(self):
+        return self.__role
+
+    def set_role(self, role):
+        self.__role = role

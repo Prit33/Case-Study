@@ -18,13 +18,14 @@ class ProjectRepositoryImpl(IProjectRepository):
         try:
             cursor = self.conn.cursor()
 
-            cursor.execute("SELECT id FROM Project WHERE id = ?", (emp.get_project_id(),))
+            #checking if the project exists with that project_id
+            cursor.execute("SELECT id FROM Project WHERE id = ?", (emp.get_project_id()))
             project = cursor.fetchone()
 
             if project is None: # raising exception if project id in not found
                 raise ProjectNotFoundException(f"Project with ID {emp.get_project_id()} not found, please check project id again")
             
-            cursor.execute("INSERT INTO Employee (name, designation, gender, salary, project_id) VALUES (?, ?, ?, ?, ?)", (emp.get_name(), emp.get_designation(), emp.get_gender(), emp.get_salary(), emp.get_project_id()))
+            cursor.execute("INSERT INTO Employee (name, designation, gender, salary, project_id, role) VALUES (?, ?, ?, ?, ?, ?)", (emp.get_name(), emp.get_designation(), emp.get_gender(), emp.get_salary(), emp.get_project_id(), emp.get_role()))
             self.conn.commit()
             return True
         except ProjectNotFoundException as e:
@@ -56,7 +57,7 @@ class ProjectRepositoryImpl(IProjectRepository):
             cursor.execute(check_employee_query, (task.get_employee_id(),))
             employee = cursor.fetchone()
 
-            # If employee does not exist, raise UserNotFound exception
+            # If employee does not exist, raise EmployeeNotFoundException exception
             if not employee:
                 raise EmployeeNotFoundException(f"Employee with ID {task.get_employee_id()} does not exist")
             
@@ -177,7 +178,6 @@ class ProjectRepositoryImpl(IProjectRepository):
         except Exception as e:
             print(f"\nError deleting task: {e}")
             return False, ""
-        
 
     def getAllTasks(self, empId, projectId):
         try:

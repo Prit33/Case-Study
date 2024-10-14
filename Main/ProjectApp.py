@@ -42,75 +42,107 @@ def main():
                 print("\nProject creation failed !!")
 
         elif choice == 2:
-             # Add Employee
-            name = input("Enter employee name: ")
-            designation = input("Enter designation: ")
-            gender = input("Enter gender: ")
-            salary = float(input("Enter salary: "))
-            project_id = int(input("Enter project ID: "))
-            emp = Employee(name=name, designation=designation, gender=gender, salary=salary, project_id=project_id)
+            # Add Employee
+            role=input("Enter your role: ")
+            print("\n")
+            if role.lower() == "manager":
+                name = input("Enter employee name: ")
+                designation = input("Enter designation: ")
+                gender = input("Enter gender: ")
+                salary = float(input("Enter salary: "))
+                project_id = int(input("Enter project ID: "))
+                role=input("Enter employee role: ")
+                emp = Employee(name=name, designation=designation, gender=gender, salary=salary, project_id=project_id, role=role)
             
-            if project_repo.createEmployee(emp):
-                print(f"\n Employee {name} added successfully.")
+                if project_repo.createEmployee(emp):
+                    print(f"\n Employee {name} added successfully.")
+                else:
+                    print("\nEmployee creation failed !!")
             else:
-                print("\nEmployee creation failed !!")
+                print("You are not allowed to add employee !\n")
 
         elif choice == 3:
             # Add Task
-            task_name = input("Enter task name: ")
-            project_id = int(input("Enter project ID: "))
-            employee_id = int(input("Enter employee ID: "))
-            status = input("Enter task status (assigned/started/completed): ")
-            task = Task(task_name=task_name, project_id=project_id, employee_id=employee_id, status=status)
+            role=input("Enter your role: ")
+            print("\n")
+            if role.lower() == "manager":
+                task_name = input("Enter task name: ")
+                project_id = int(input("Enter project ID: "))
+                employee_id = int(input("Enter employee ID: "))
+                status = input("Enter task status (assigned/started/completed): ")
+                task = Task(task_name=task_name, project_id=project_id, employee_id=employee_id, status=status)
 
-            if project_repo.createTask(task):
-                print(f"\nTask {task_name} added successfully.")
+                if project_repo.createTask(task):
+                    print(f"\nTask {task_name} added successfully.")
+                else:
+                    print("Task creation failed !!")
             else:
-                print("Task creation failed !!")
+                print("You are not allowed to add task !\n")
 
         elif choice == 4:
             # Assign project to employee
-            project_id = int(input("Enter project ID: "))
-            employee_id = int(input("Enter employee ID: "))
+            role=input("Enter your role: ")
+            print("\n")
+            if role.lower() == "manager":
+                project_id = int(input("Enter project ID: "))
+                employee_id = int(input("Enter employee ID: "))
 
-            if project_repo.assignProjectToEmployee(project_id, employee_id):
-                print(f"\nProject {project_id} assigned to employee {employee_id} successfully.")
+                if project_repo.assignProjectToEmployee(project_id, employee_id):
+                    print(f"\nProject {project_id} assigned to employee {employee_id} successfully.")
+                else:
+                    print("\n Assignment project to employee failed !!")
             else:
-                print("\n Assignment project to employee failed !!")
+                print("You are not allowed to assign project !\n")
 
         elif choice == 5:
             # Assign task in project to employee
-            task_id = int(input("Enter task ID: "))
-            project_id = int(input("Enter project ID: "))
-            employee_id = int(input("Enter employee ID: "))
+            role=input("Enter your role: ")
+            print("\n")
+            if role.lower() == "manager":
+                task_id = int(input("Enter task ID: "))
+                project_id = int(input("Enter project ID: "))
+                employee_id = int(input("Enter employee ID: "))
 
-            if project_repo.assignTaskInProjectToEmployee(task_id, project_id, employee_id):
-                print(f"\nTask {task_id} in project {project_id} assigned to employee {employee_id} successfully.")
+                if project_repo.assignTaskInProjectToEmployee(task_id, project_id, employee_id):
+                    print(f"\nTask {task_id} in project {project_id} assigned to employee {employee_id} successfully.")
+                else:
+                    print("\n  Assignment task within a project to employee failed !!\n")
             else:
-                print("\n  Assignment task within a project to employee failed !!\n")
+                print("You are not allowed to assign project !\n")
 
         elif choice == 6:
             # Delete Task
-            task_id = int(input("Enter task ID to delete: "))
-            (success, message)=project_repo.deleteTask(task_id)
-            # print( success, message)
+            role=input("Enter your role: ")
+            print("\n")
+            if role.lower() == "manager":
+                task_id = int(input("Enter task ID to delete: "))
+                (success, message)=project_repo.deleteTask(task_id)
+                # print( success, message)
 
-            if success:
-                print(f"\nTask of id:{task_id} deleted successfully")
+                if success:
+                    print(f"\nTask of id:{task_id} deleted successfully")
+                else:
+                    print(f"\nDeletion of Task failed due to: {message} ")
             else:
-                print(f"\nDeletion of Task failed due to: {message} ")
+                print("You are not allowed to delete task !!")
 
         elif choice == 7:            
             # Delete Employee
-            employee_id = int(input("Enter employee ID to delete: "))
+            role=input("Enter your role: ")
+            print("\n")
+            if role.lower() == "manager":
+                employee_id = int(input("Enter employee ID to delete: "))
 
-            if project_repo.deleteEmployee(employee_id):
-                print(f"\nEmployee of id:{employee_id} deleted successfully.")
+                if project_repo.deleteEmployee(employee_id):
+                    print(f"\nEmployee of id:{employee_id} deleted successfully.")
+                else:
+                    print("\n Deletion of Employee failed , try deleting task which is assigned to employee first!!\n")
             else:
-                print("\n Deletion of Employee failed , try deleting task which is assigned to employee first!!\n")
+                print("You are not allowed to delete Employee !!")
 
         elif choice == 8:
             # List all tasks assigned to an employee in a project
+
             emp_id = int(input("Enter employee ID: "))
             project_id = int(input("Enter project ID: "))
 
@@ -119,11 +151,11 @@ def main():
                 print("\n===== Tasks Assigned to Employee =====")
                 for task in tasks:
                     print(f"\nTask ID: {task.task_id}, Task Name: {task.task_name}, Status: {task.status}")
-            else:
-                print("\nError in retrieving tasks")
+            # else:
+            #     print("\nError in retrieving tasks")
 
         elif choice == 9:
-            print("\nExiting application.")
+            print("\nExiting application.... !!")
             break
 
         else:

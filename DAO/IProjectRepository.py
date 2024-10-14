@@ -27,6 +27,10 @@ class IProjectRepository(ABC):
         pass
 
     @abstractmethod
+    def deleteTask(self, task_id):
+        pass
+
+    @abstractmethod
     def deleteProject(self, projectId):
         pass
 
